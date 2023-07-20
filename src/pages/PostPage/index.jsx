@@ -1,61 +1,48 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import WithParams from '../../components/WithParams';
-// import { Navigate } from 'react-router-dom';
-// import { PATHS } from '../../router/paths';
-import Container from '../../components/Container';
-import { Navigate } from 'react-router-dom';
-import { PATHS } from '../../router/paths';
-
-class PostPag extends Component {
+import axios from 'axios';
 
 
-  state = { 
-    post: null,
-    isLoading: true,
-    isEditing: false,
 
+function Store(props) {
+  const [store, setStore] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchData = async () => {
+      try {
+          const response = await axios.get(`https://some-data.onrender.com/stores/${props.params.id}`);
+          const data = response.data;
+          setStore(data);
+      } catch (error) {
+          setError('Error While Fetching')
+      } finally {
+          setIsLoading(false);
+      }
   };
 
-  id = this.props?.params?.id;
+  useEffect(() => {
+      fetchData();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.params.id]);
 
-  handleEdit = () => {
-    console.log(this.id, 'is edited');
-    this.setState({isEditing: true})
-  } 
-
-  componentDidMount(){
-    fetch(`https://some-data.onrender.com/stores/${this.id}`)
-      .then((response) => response.json())
-      .then((data) => this.setState({post: data, isLoading: false}) );
-  }
-
-  render() {
-
-    return (
-      <Container>
-        { this.state.isLoading? (
-            <p>Loding post info...</p>
-        ): (
-          <>
-            <h5>{this.state.post.id} </h5>
-            <h2>{this.state.post?.name}</h2>
-            <p>{this.state.post.cities}</p>
-          </>
-        )}
-
-          <button onClick={this.handleEdit}>Edit</button>
-          {
-            this.state.isEditing && (
-              < Navigate to={PATHS.POSTS.EDIT.replace(':id',this.id)} replace />
-            )
-          }
-
-      </Container>
-    )
-  }
+  return (
+      <div>
+          {!isLoading && (
+              <div className="store__details">
+                  <h1>Details:</h1>
+                  <p>Store Id: {store.id}</p>
+                  <p>Store Name: {store.name}</p>
+                  <p>Store Location: {store.cities}</p>
+                  <span className="error__message">{error}</span>
+              </div>
+          )}
+      </div>
+  );
 }
 
-export default WithParams(PostPag);
+export default WithParams(Store);
+
 /**
  * WithParams 
  * صراحتاً هاي بحسها عبارى عن موصل بتنقلك 

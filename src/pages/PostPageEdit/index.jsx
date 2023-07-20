@@ -1,78 +1,100 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import Container from '../../components/Container'
-import PostForm from '../../components/PostForm'
 import WithParams from '../../components/WithParams';
-import { Navigate } from 'react-router-dom';
-import { PATHS } from '../../router/paths';
+import { useNavigate } from 'react-router-dom';
 
 
-class PostPageEdit extends Component {
+function EditStorePage(props) {
+  const id = props.params.id;
+  const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [cities, setCities] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState(null);
 
-  state = {
-    post: null,
-    isLoading: true,
-    isGoToListPage: false,
-  }; 
-
-  id = this.props.params.id;
-  
-  componentDidMount(){
-    fetch(`https://some-data.onrender.com/stores/${this.id}`)
-      .then((response) => response.json())
-      .then((data) => this.setState({post: data, isLoading: false}));
+  const fetchStoreDetails = async () => {
+      try {
+          const response = await axios.get(`https://some-data.onrender.com/stores/${id}`);
+          const storeData = response.data;
+          setName(storeData.name);
+          setCities(storeData.cities);
+      } catch (error) {
+          setError('Error while fetching store details!');
+      }
   }
+  useEffect(() => {
 
-  handleEditPost = async (body) => {
-    // fetch(`https://jsonplaceholder.typicode.com/posts/${this.id}`, {
-    //   method: 'PUT',
-    //   body: JSON.stringify(body),
-    //   headers: {
-    //     'Content-type': 'application/json; charset=UTF-8',
-    //   },
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) =>
-    //     this.setState({ post: data, isLoading: false, isEditing: false })
-    //   );
-    this.setState({ isLoading: true });
-    try {
-      const res = await axios.put(
-        `https://some-data.onrender.com/stores/${this.id}`,
-        body
-      );
-      console.log(res.data);
-      this.setState({
-        post: res.data,
-        isLoading: false,
-        isGotToListPage: true,
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
+      fetchStoreDetails();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  const handleInputChange = (event) => {
+      const { name, value } = event.target;
+      if (name === 'name') {
+          setName(value);
+      } else if (name === 'cities') {
+          if (typeof value === 'string') {
+              setCities(value.trim());
+          } else {
+              setCities(value);
+          }
+      }
   };
 
-  render() {
 
+  const handleSubmit = async (event) => {
+      event.preventDefault();
+      const data = { name, cities }
+      setIsLoading(true);
+      setError(null);
+      try {
+          await axios.put(`https://some-data.onrender.com/stores/${id}`, data);
+          setIsLoading(false);
+          setIsSubmitted(true);
+      } catch (error) {
+          setIsLoading(false);
+          setError('Error while updating store');
+      }
+  };
 
-    return (
+  isSubmitted && navigate('/stores/all');
+
+  return (
       <div>
-        <Container>
-          <h1>Edit page - صفحة التعديل </h1>
-          
-          <PostForm 
-            post = {this.state.post}
-            handleSubmit = {this.handleEditPost}
-            isLoading = {this.state.isLoading}
-          />
-        </Container>
-
-        {this.state.isGotToListPage && (
-          <Navigate to={PATHS.POSTS.ROOT} replace />
-        )}
+          <Container>
+              <h1 className='hero__text'>Update Store {id}</h1>
+              {isLoading ? (
+                  <p>Loading...</p>
+              ) : (
+                  <form className='form__container' onSubmit={handleSubmit}>
+                      <label>
+                          Name:
+                          <input
+                              className='input'
+                              type='text'
+                              name='name'
+                              value={name}
+                              onChange={handleInputChange}
+                          />
+                      </label>
+                      <label>
+                          Cities:
+                          <input
+                              className='input'
+                              type='text'
+                              name='cities'
+                              value={cities}
+                              onChange={handleInputChange}
+                          />
+                      </label>
+                      <button type='submit'>Update Store</button>
+                  </form>
+              )}
+              {error && <p className='error__message'>Error: {error}</p>}
+          </Container>
       </div>
-    );
-  }
+  );
 }
-
-export default WithParams(PostPageEdit);
+export default WithParams(EditStorePage);
