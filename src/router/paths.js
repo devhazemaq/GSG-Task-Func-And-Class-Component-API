@@ -7,7 +7,10 @@ export const PATHS = {
     CREATE: '/posts/create',
     EDIT: '/posts/:id/edit',
   },
-
+  ADMIN: {
+    ROOT: '/admin',
+    USERS: '/admin/users',
+  },
   ERRORS: {
     NOT_FOUND: '404',
   },
