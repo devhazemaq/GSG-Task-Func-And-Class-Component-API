@@ -5,6 +5,7 @@ import PostForm from '../../components/PostForm'
 import WithParams from '../../components/WithParams';
 import { Navigate } from 'react-router-dom';
 import { PATHS } from '../../router/paths';
+import { API_URL } from '../../components/config/api';
 
 
 class PostPageEdit extends Component {
@@ -18,7 +19,7 @@ class PostPageEdit extends Component {
   id = this.props.params.id;
   
   componentDidMount(){
-    fetch(`https://some-data.onrender.com/stores/${this.id}`)
+    fetch(`${API_URL}/posts/${this.id}`)
       .then((response) => response.json())
       .then((data) => this.setState({post: data, isLoading: false}));
   }
@@ -38,14 +39,14 @@ class PostPageEdit extends Component {
     this.setState({ isLoading: true });
     try {
       const res = await axios.put(
-        `https://some-data.onrender.com/stores/${this.id}`,
+        `${API_URL}/posts/${this.id}`,
         body
       );
       console.log(res.data);
       this.setState({
         post: res.data,
         isLoading: false,
-        isGotToListPage: true,
+        isGoToListPage: true,
       });
     } catch (error) {
       console.log(error.message);
@@ -67,7 +68,7 @@ class PostPageEdit extends Component {
           />
         </Container>
 
-        {this.state.isGotToListPage && (
+        {this.state.isGoToListPage && (
           <Navigate to={PATHS.POSTS.ROOT} replace />
         )}
       </div>

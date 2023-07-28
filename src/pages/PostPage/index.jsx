@@ -1,73 +1,60 @@
-import React, { Component } from 'react'
-import WithParams from '../../components/WithParams';
-// import { Navigate } from 'react-router-dom';
-// import { PATHS } from '../../router/paths';
+import React, { useState, useEffect } from 'react'
 import Container from '../../components/Container';
-import { Navigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { PATHS } from '../../router/paths';
+import axios from 'axios';
+import { API_URL } from '../../components/config/api';
 
-class PostPag extends Component {
 
 
-  state = { 
-    post: null,
-    isLoading: true,
-    isEditing: false,
+const PostPage = () => {
 
-  };
+  const [post, setPost] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  // const [isEditing, setIsEditing] = useState(false)
+  const [, setError] = useState("");
+  const navigate = useNavigate();
+  const { id } = useParams();
+  
 
-  id = this.props?.params?.id;
+  useEffect(()=>{
+    (async () => {
+      
+      try {
+        setIsLoading(true);
+        const {data} = await axios.get(`${API_URL}/posts/${id}`);
+        setPost(data);
+      }
+      catch (error) {
+        setError(error);
+        console.log(error, "هين طبعنا الإيرور اللي مسكتو من الكاتش  هاد من صفحة  البوست بيج ");
+      }
+      finally {
+        setIsLoading(false)
+      }
+    })()
+  },[id])
+    
+  const handleEdit = () => navigate(PATHS.POSTS.EDIT.replace(':id',id));
 
-  handleEdit = () => {
-    console.log(this.id, 'is edited');
-    this.setState({isEditing: true})
-  } 
 
-  componentDidMount(){
-    fetch(`https://some-data.onrender.com/stores/${this.id}`)
-      .then((response) => response.json())
-      .then((data) => this.setState({post: data, isLoading: false}) );
-  }
 
-  render() {
+  return (
+    <Container>
+      { isLoading? (
+          <p>Loding post info...</p>
+      ): (
+        <>
+          <h5>{post?.id} </h5>
+          <h2>{post?.title}</h2>
+          <h3>{post?.author}</h3>
+        </>
+      )}
+        <button onClick={handleEdit}>Edit</button>
 
-    return (
-      <Container>
-        { this.state.isLoading? (
-            <p>Loding post info...</p>
-        ): (
-          <>
-            <h5>{this.state.post.id} </h5>
-            <h2>{this.state.post?.name}</h2>
-            <p>{this.state.post.cities}</p>
-          </>
-        )}
-
-          <button onClick={this.handleEdit}>Edit</button>
-          {
-            this.state.isEditing && (
-              < Navigate to={PATHS.POSTS.EDIT.replace(':id',this.id)} replace />
-            )
-          }
-
-      </Container>
-    )
-  }
+    </Container>
+  )
 }
 
-export default WithParams(PostPag);
-/**
- * WithParams 
- * صراحتاً هاي بحسها عبارى عن موصل بتنقلك 
- * البروبس إللي في المكان الل أجت منو
- * 
- * الان مش ال إي دي وصلك كل الهتعملو إنك هتعمل ركوست طلب 
- * هتجيب الداتا تبع العنصر هاد او ال إي دي هاد او البووست هاد
- * #مش هنختلف
- *   طبعاُ أحنا الركوست هاد هنحطو بدالة كمبوننت دد ماونت 
- * 
- * طبعاُ ما بدنا ننسى انو لازمنا ستيت خاصة بالصفحة هاد إللي هي بوست بيج 
- * اول اشي لزمنا بالستيت بوست ورح يكون فاضي و إز لودنق أكيد 
- * وإز إيدتنق عشان اعدل فيما بعد
- * 
- */
+export default PostPage;
+

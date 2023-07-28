@@ -5,12 +5,12 @@ export const POSTS_COLUMNS = (handleDelete, handleEdit) => [
     title: 'Id',
   },
   {
-    key: 'name',
-    title: 'Name',
+    key: 'title',
+    title: 'Title',
   },
   {
-    key: 'cities',
-    title: 'Cities',
+    key: 'author',
+    title: 'Auther',
   },
   
   {
@@ -29,15 +29,15 @@ export const POSTS_COLUMNS = (handleDelete, handleEdit) => [
 
 export const INPUTS_ARRAY = [
   {
-    id: 'name',
-    name: 'name',
+    id: 'title',
+    name: 'title',
     type: 'text',
-    label: 'Name',
+    label: 'title',
   },
   {
-    id: 'cities',
-    name: 'cities',
+    id: 'author',
+    name: 'author',
     type: 'text',
-    label: 'Cities',
+    label: 'author',
   },
 ]

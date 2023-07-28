@@ -11,16 +11,16 @@ import { INPUTS_ARRAY } from '../../constants/posts'
 class PostForm extends Component {
 
   state = {
-    name: '',
-    cities: '',
+    title: '',
+    auther: '',
     isGetFirstTimeData: true,
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
     const data = {
-      name: this.state.name,
-      cities: this.state.cities,
+      title: this.state.title,
+      auther: this.state.auther,
     };
 
     this.props.handleSubmit(data);
@@ -30,8 +30,8 @@ class PostForm extends Component {
     console.log(props.post)
     if (props.post && state.isGetFirstTimeData) {
       return {
-        name : props.post.name,
-        cities : props.post.cities,
+        title : props.post.title,
+        auther : props.post.auther,
         isGetFirstTimeData: false,
       }
     }

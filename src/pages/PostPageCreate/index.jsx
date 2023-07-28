@@ -4,6 +4,7 @@ import PostForm from '../../components/PostForm';
 import { Navigate } from 'react-router-dom';
 import { PATHS } from '../../router/paths';
 import  axios  from 'axios';
+import { API_URL } from '../../components/config/api';
 
 export default class PostPageCreate extends Component {
 
@@ -22,7 +23,7 @@ export default class PostPageCreate extends Component {
     this.setState({ isLoading: true });
     try {
       const res = await axios.post(
-        'https://some-data.onrender.com/stores',
+        `${API_URL}/posts`,
         body
       );
       this.setState({ isLoading: false, isGoToListPage: true });

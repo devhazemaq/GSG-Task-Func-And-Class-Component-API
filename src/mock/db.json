@@ -1,0 +1,25 @@
+{
+  "posts": [
+    {
+      "title": "json-server 12",
+      "id": 1
+    },
+    {
+      "id": 1,
+      "title": "wesam",
+      "author": "wesam 2"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode",
+    "age": 63,
+    "email": "haz@gmai.com"
+  }
+}
