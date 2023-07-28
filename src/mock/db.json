@@ -1,22 +1,32 @@
 {
   "posts": [
     {
-      "title": "json-server 12",
-      "id": 1
+      "title": "sd",
+      "author": "sdxaA",
+      "id": 5
     },
     {
-      "id": 1,
-      "title": "wesam",
-      "author": "wesam 2"
-    }
-  ],
-  "comments": [
+      "title": "cre new",
+      "author": "haz",
+      "id": 6
+    },
     {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
+      "title": "sdc",
+      "author": "sdc",
+      "id": 7
+    },
+    {
+      "title": "qqq",
+      "author": "QQQ",
+      "id": 8
+    },
+    {
+      "title": "test 3",
+      "author": "test 33",
+      "id": 9
     }
   ],
+  "comments": [],
   "profile": {
     "name": "typicode",
     "age": 63,

@@ -7,12 +7,11 @@ import { INPUTS_ARRAY } from '../../constants/posts'
 
 
 
-
 class PostForm extends Component {
 
   state = {
     title: '',
-    auther: '',
+    author: '',
     isGetFirstTimeData: true,
   }
 
@@ -20,7 +19,7 @@ class PostForm extends Component {
     e.preventDefault();
     const data = {
       title: this.state.title,
-      auther: this.state.auther,
+      author: this.state.author,
     };
 
     this.props.handleSubmit(data);
@@ -31,7 +30,7 @@ class PostForm extends Component {
     if (props.post && state.isGetFirstTimeData) {
       return {
         title : props.post.title,
-        auther : props.post.auther,
+        author : props.post.author,
         isGetFirstTimeData: false,
       }
     }

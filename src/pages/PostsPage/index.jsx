@@ -9,10 +9,6 @@ import { API_URL } from '../../components/config/api';
 
 
 
-
-
-
-
 const PostsPage = () => {
 
   const [posts, setPosts] = useState([]);
@@ -53,14 +49,16 @@ const PostsPage = () => {
 
 
   const handleDelete = async (id) => {
+    setIsLoading(true);
     console.log(id, 'is deleted');
     try {
-      axios.delete(`${API_URL}/posts/${id}`);
+      await axios.delete(`${API_URL}/posts/${id}`);
+      setPosts(posts.filter((post) => post.id !== id));
     } catch (err) {
       console.log(err);
     }
     finally {
-      setIsLoading(true)
+      setIsLoading(false)
     }
   };
 
